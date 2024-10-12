@@ -19,4 +19,10 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         config.setApplicationDestinationPrefixes("/pub"); // 클라이언트가 메시지를 보낼 때 사용하는 경로를 정의. /pub/hello로 메시지를 보내면 서버의 핸들러가 처리함,  도착 경로에 대한 prefix
     }
 
+    @Override
+    public void registerStompEndpoints(StompEndpointRegistry registry){
+        registry.addEndpoint("/ws-stomp").setAllowedOriginPatterns("*").withSockJS(); // /ws 경로로 클라이언트가 연결할 수 있게 하고, 브라우저가 WebSocket을 지원하지 않을 때에 대비해 폴백 메커니즘 제공
+        //SockJS는 webSocket을 대체해 양방향 통신이 가능하게 함
+    }
+
 }
