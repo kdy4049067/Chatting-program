@@ -25,4 +25,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         //SockJS는 webSocket을 대체해 양방향 통신이 가능하게 함
     }
 
+    @Override
+    public void configureWebSocketTransport(WebSocketTransportRegistration registration) {
+        registration.setMessageSizeLimit(128 * 1024); // 메시지 크기 제한 설정 (128KB)
+    }
+
 }
