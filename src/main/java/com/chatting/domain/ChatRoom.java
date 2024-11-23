@@ -1,7 +1,10 @@
 package com.chatting.domain;
 
+import lombok.Data;
+
 import java.util.*;
 
+@Data
 public class ChatRoom {
 
     private String roomId;
