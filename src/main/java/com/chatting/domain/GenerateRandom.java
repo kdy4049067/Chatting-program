@@ -2,6 +2,6 @@ package com.chatting.domain;
 
 public interface GenerateRandom {
 
-    abstract String generateRandom();
+    abstract String generateRandomNumber();
 
 }
