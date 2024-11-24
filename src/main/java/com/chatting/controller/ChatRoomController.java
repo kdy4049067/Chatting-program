@@ -31,10 +31,4 @@ public class ChatRoomController {
         return ResponseEntity.status(OK).body(chatRoom);
     }
 
-    @GetMapping("/room/{roomId}")
-    public ResponseEntity<ChatRoom> findRoom(@PathVariable String roomId){
-        ChatRoom chatRoom = chatRoomService.findRoomById(roomId);
-        return ResponseEntity.status(OK).body(chatRoom);
-    }
-
 }
