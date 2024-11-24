@@ -5,7 +5,7 @@ import java.util.UUID;
 public class GenerateRandomRoom implements GenerateRandom{
 
     @Override
-    public String generateRandom(){
+    public String generateRandomNumber(){
         return UUID.randomUUID().toString();
     }
 
