@@ -11,10 +11,12 @@ public class ChatRoom implements Comparable<ChatRoom>{
     private String name;
     private GenerateRandom generateRandom;
 
-    public ChatRoom(String name, GenerateRandom generateRandom){
-        this.generateRandom = generateRandom;
-        this.name = name;
-        this.roomId = generateRandom.generateRandom();
+    public static ChatRoom create(String name, GenerateRandom generateRandom){
+        ChatRoom chatRoom = new ChatRoom();
+        chatRoom.roomId = generateRandom.generateRandomNumber();
+        chatRoom.name = name;
+
+        return chatRoom;
     }
 
     @Override
