@@ -4,17 +4,23 @@ import com.chatting.domain.ChatRoom;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Repository;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 @Repository
-public class CharRoomRepository {
+public class ChatRoomRepository {
 
     private Map<String, ChatRoom> chatRoomMap;
 
     @PostConstruct
     private void init(){
         chatRoomMap = new LinkedHashMap<>();
+    }
+
+    public List<ChatRoom> allRoom(){
+        List<ChatRoom> chatRooms = new ArrayList<>(chatRoomMap.values());
+        Collections.sort(chatRooms);
+
+        return chatRooms;
     }
 
 }
