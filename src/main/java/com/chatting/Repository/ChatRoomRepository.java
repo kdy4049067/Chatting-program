@@ -1,6 +1,7 @@
 package com.chatting.Repository;
 
 import com.chatting.domain.ChatRoom;
+import com.chatting.domain.GenerateRandomRoom;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Repository;
 
@@ -10,6 +11,7 @@ import java.util.*;
 public class ChatRoomRepository {
 
     private Map<String, ChatRoom> chatRoomMap;
+    private GenerateRandomRoom generateRandomRoom;
 
     @PostConstruct
     private void init(){
@@ -27,6 +29,10 @@ public class ChatRoomRepository {
         return chatRoomMap.get(id);
     }
 
-
+    public ChatRoom createChatRoom(String name){
+        ChatRoom chatRoom = ChatRoom.create(name, generateRandomRoom);
+        chatRoomMap.put(chatRoom.getRoomId(), chatRoom);
+        return chatRoom;
+    }
 
 }
