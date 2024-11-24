@@ -35,4 +35,8 @@ public class ChatRoomRepository {
         return chatRoom;
     }
 
+    public void deleteChatRoom(String id){
+        chatRoomMap.remove(id);
+    }
+
 }
