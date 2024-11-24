@@ -23,4 +23,10 @@ public class ChatRoomRepository {
         return chatRooms;
     }
 
+    public ChatRoom findChatRoomById(String id){
+        return chatRoomMap.get(id);
+    }
+
+
+
 }
