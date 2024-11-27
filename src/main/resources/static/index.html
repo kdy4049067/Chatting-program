@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>STOMP WebSocket Chat</title>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+</head>
+<body>
+<h1>STOMP WebSocket Chat</h1>
+
+<div id="chat"></div>
+<input type="text" id="username" placeholder="Enter your name" />
+<button onclick="connect()">Connect</button>
+<br>
+<input type="text" id="message" placeholder="Enter your message" />
+<button onclick="sendMessage()">Send</button>
+
+<script>
+    var stompClient = null;
+
+    function connect() {
+        var socket = new SockJS('/ws-stomp');
+        stompClient = Stomp.over(socket);
+
+        stompClient.connect({}, function(frame) {
+            console.log('Connected: ' + frame);
+            stompClient.subscribe('/sub/chat/room', function(message) {
+                console.log("Received message:", message.body);
+                showMessage(JSON.parse(message.body));
+            });
+        }, function(error) {
+            console.error("WebSocket connection error:", error);
+        });
+    }
+
+    function sendMessage() {
+        if (!stompClient || !stompClient.connected) {
+            console.error("STOMP client is not connected!");
+            return;
+        }
+
+        var message = {
+            sender: document.getElementById('username').value,
+            content: document.getElementById('message').value,
+            type: 'CHAT'
+        };
+        console.log("Sending message:", message);
+        stompClient.send("/pub/chat/send", {}, JSON.stringify(message));
+    }
+
+    function showMessage(message) {
+        var chat = document.getElementById('chat');
+        chat.innerHTML += `<p><strong>${message.sender}:</strong> ${message.content}</p>`;
+    }
+</script>
+</body>
+</html>
