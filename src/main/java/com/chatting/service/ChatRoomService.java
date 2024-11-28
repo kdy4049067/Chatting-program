@@ -32,9 +32,11 @@ public class ChatRoomService {
         return chatRoom.createChatRoomDto();
     }
 
-    public void createChatRoom(String name){
+    public ChatRoomDto createChatRoom(String name){
         ChatRoom chatRoom = new ChatRoom(name);
         chatRoomRepository.save(chatRoom);
+
+        return chatRoom.createChatRoomDto();
     }
 
 }
