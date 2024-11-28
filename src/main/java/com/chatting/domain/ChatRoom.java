@@ -16,10 +16,8 @@ public class ChatRoom implements Comparable<ChatRoom>{
     @Column
     private String name;
 
-    public ChatRoom createChatRoom(String chatRoomName){
-        ChatRoom chatRoom = new ChatRoom();
-        chatRoom.name = chatRoomName;
-        return chatRoom;
+    public ChatRoom(String name){
+        this.name = name;
     }
 
     @Override
@@ -27,10 +25,10 @@ public class ChatRoom implements Comparable<ChatRoom>{
         return this.roomId.compareTo(chatRoom.getRoomId());
     }
 
-    public ChatRoomDto createChatRoomDto(ChatRoom chatRoom){
+    public ChatRoomDto createChatRoomDto(){
         return new ChatRoomDto(
-                chatRoom.roomId,
-                chatRoom.name
+                this.roomId,
+                this.name
         );
     }
 
