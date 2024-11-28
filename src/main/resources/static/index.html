@@ -8,6 +8,9 @@
 <body>
 <h1>STOMP WebSocket Chat</h1>
 
+<input type = "text" id = "createChatRoom" placeholder="Create Chat Room"/>
+<button onclick="createRoom()">create</button>
+
 <div id="chat"></div>
 <input type="text" id="username" placeholder="Enter your name" />
 <button onclick="connect()">Connect</button>
@@ -51,6 +54,25 @@
     function showMessage(message) {
         var chat = document.getElementById('chat');
         chat.innerHTML += `<p><strong>${message.sender}:</strong> ${message.content}</p>`;
+    }
+
+    function createRoom(){
+        var roomName = document.getElementById("createChatRoom").value;
+        if(!roomName){
+            alert("please enter a room name");
+            return;
+        }
+
+        fetch('/chat/room?name=' + encodeURIComponent(roomName),{
+            method: 'POST',
+        })
+            .then(response => response.json())
+            .then(data =>{
+                console.log("Chat room created:", data);
+                alert(`Chat room "${data.name}" created! Room ID: ${data.roomId}`);
+
+
+            })
     }
 </script>
 </body>
