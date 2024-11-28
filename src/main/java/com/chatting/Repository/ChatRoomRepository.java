@@ -5,46 +5,20 @@ import com.chatting.domain.GenerateRandom;
 import com.chatting.domain.GenerateRandomRoom;
 import com.chatting.exception.ErrorException;
 import jakarta.annotation.PostConstruct;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
 @Repository
-public class ChatRoomRepository {
+public interface ChatRoomRepository extends JpaRepository<ChatRoom, String> {
 
-    private Map<String, ChatRoom> chatRoomMap;
-    private final GenerateRandom generateRandom;
+    public ChatRoom findByName(String name);
 
-    public ChatRoomRepository(GenerateRandom generateRandom){
-        this.generateRandom = generateRandom;
-    }
+    public ChatRoom findByRoomId(String id);
 
-    @PostConstruct
-    private void init(){
-        chatRoomMap = new LinkedHashMap<>();
-    }
+    public List<ChatRoom> findAll();
 
-    public List<ChatRoom> allRoom(){
-        List<ChatRoom> chatRooms = new ArrayList<>(chatRoomMap.values());
-        Collections.sort(chatRooms);
-
-        return chatRooms;
-    }
-
-    public ChatRoom findChatRoomById(String id){
-        ChatRoom chatRoom = chatRoomMap.get(id);
-        if(chatRoom == null)
-            throw new NoSuchElementException(ErrorException.findError());
-
-        return chatRoomMap.get(id);
-    }
-
-    public void deleteChatRoom(String id){
-        ChatRoom chatRoom = chatRoomMap.get(id);
-        if(chatRoom == null)
-            throw new IllegalArgumentException(ErrorException.deleteError());
-
-        chatRoomMap.remove(id);
-    }
+    public ChatRoom createChatRoom(String name);
 
 }
