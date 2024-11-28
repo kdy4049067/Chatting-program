@@ -2,6 +2,7 @@ package com.chatting.service;
 
 import com.chatting.Repository.ChatRoomRepository;
 import com.chatting.domain.ChatRoom;
+import com.chatting.dto.ChatRoomDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,16 +16,10 @@ public class ChatRoomService {
         this.chatRoomRepository = chatRoomRepository;
     }
 
-    public List<ChatRoom> findAllRoom(){
-        return chatRoomRepository.allRoom();
-    }
-
-    public ChatRoom findRoomById(String id){
-        return chatRoomRepository.findChatRoomById(id);
-    }
-
-    public void deleteRoom(String id){
-        chatRoomRepository.deleteChatRoom(id);
+    public List<ChatRoomDto> findAllRoom(){
+        return chatRoomRepository.findAll().stream()
+                .map(ChatRoom::createChatRoomDto)
+                .toList();
     }
 
 }
