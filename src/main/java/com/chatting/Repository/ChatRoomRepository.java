@@ -39,15 +39,6 @@ public class ChatRoomRepository {
         return chatRoomMap.get(id);
     }
 
-    public ChatRoom createChatRoom(String name){
-        ChatRoom chatRoom = ChatRoom.create(name, generateRandom);
-        if(chatRoomMap.containsKey(chatRoom.getRoomId())){
-            throw new IllegalArgumentException(ErrorException.duplicateError());
-        }
-        chatRoomMap.put(chatRoom.getRoomId(), chatRoom);
-        return chatRoom;
-    }
-
     public void deleteChatRoom(String id){
         ChatRoom chatRoom = chatRoomMap.get(id);
         if(chatRoom == null)

@@ -1,23 +1,19 @@
 package com.chatting.domain;
 
+import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.stereotype.Controller;
 
 import java.util.*;
 
 @Data
+@Entity(name="chatting")
 public class ChatRoom implements Comparable<ChatRoom>{
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String roomId;
+    @Column
     private String name;
-    private GenerateRandom generateRandom;
-
-    public static ChatRoom create(String name, GenerateRandom generateRandom){
-        ChatRoom chatRoom = new ChatRoom();
-        chatRoom.roomId = generateRandom.generateRandomNumber();
-        chatRoom.name = name;
-
-        return chatRoom;
-    }
 
     @Override
     public int compareTo(ChatRoom chatRoom){

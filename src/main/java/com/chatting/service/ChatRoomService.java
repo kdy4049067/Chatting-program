@@ -23,10 +23,6 @@ public class ChatRoomService {
         return chatRoomRepository.findChatRoomById(id);
     }
 
-    public ChatRoom createRoom(String name){
-        return chatRoomRepository.createChatRoom(name);
-    }
-
     public void deleteRoom(String id){
         chatRoomRepository.deleteChatRoom(id);
     }
