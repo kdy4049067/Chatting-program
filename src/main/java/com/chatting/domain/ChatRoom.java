@@ -15,6 +15,12 @@ public class ChatRoom implements Comparable<ChatRoom>{
     @Column
     private String name;
 
+    public ChatRoom createChatRoom(String chatRoomName){
+        ChatRoom chatRoom = new ChatRoom();
+        chatRoom.name = chatRoomName;
+        return chatRoom;
+    }
+
     @Override
     public int compareTo(ChatRoom chatRoom){
         return this.roomId.compareTo(chatRoom.getRoomId());
