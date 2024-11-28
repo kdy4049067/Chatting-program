@@ -1,5 +1,6 @@
 package com.chatting.domain;
 
+import com.chatting.dto.ChatRoomDto;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.stereotype.Controller;
@@ -24,6 +25,13 @@ public class ChatRoom implements Comparable<ChatRoom>{
     @Override
     public int compareTo(ChatRoom chatRoom){
         return this.roomId.compareTo(chatRoom.getRoomId());
+    }
+
+    public ChatRoomDto createChatRoomDto(ChatRoom chatRoom){
+        return new ChatRoomDto(
+                chatRoom.roomId,
+                chatRoom.name
+        );
     }
 
 }
