@@ -27,6 +27,9 @@ public class ChatRoomService {
         return chatRoom.createChatRoomDto();
     }
 
-
+    public ChatRoomDto findChatRoomById(String id){
+        ChatRoom chatRoom = chatRoomRepository.findByName(id);
+        return chatRoom.createChatRoomDto();
+    }
 
 }
