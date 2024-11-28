@@ -1,6 +1,7 @@
 package com.chatting.controller;
 
 import com.chatting.domain.ChatRoom;
+import com.chatting.dto.ChatRoomDto;
 import com.chatting.service.ChatRoomService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,21 +20,21 @@ public class ChatRoomController {
     }
 
     @GetMapping("/rooms")
-    public ResponseEntity<List<ChatRoom>> room(){
-        List<ChatRoom> chatRoom = chatRoomService.findAllRoom();
-        return ResponseEntity.ok(chatRoom);
+    public ResponseEntity<List<ChatRoomDto>> room(){
+        List<ChatRoomDto> chatRoomDto = chatRoomService.findAllRoom();
+        return ResponseEntity.ok(chatRoomDto);
     }
 
     @PostMapping("/room")
-    public ResponseEntity<ChatRoom> createRoom(@RequestParam String name) {
-        ChatRoom chatRoom = chatRoomService.createRoom(name);
-        return ResponseEntity.ok(chatRoom);
+    public ResponseEntity<ChatRoomDto> createRoom(@RequestParam String name) {
+        ChatRoomDto chatRoomDto = chatRoomService.createChatRoom(name);
+        return ResponseEntity.ok(chatRoomDto);
     }
 
     @GetMapping("/room/{roomId}")
-    public ResponseEntity<ChatRoom> findRoom(@PathVariable String roomId){
-        ChatRoom chatRoom = chatRoomService.findRoomById(roomId);
-        return ResponseEntity.ok(chatRoom);
+    public ResponseEntity<ChatRoomDto> findRoom(@PathVariable String roomId){
+        ChatRoomDto chatRoomDto = chatRoomService.findChatRoomById(roomId);
+        return ResponseEntity.ok(chatRoomDto);
     }
 
 }
