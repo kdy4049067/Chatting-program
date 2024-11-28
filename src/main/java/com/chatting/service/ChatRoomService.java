@@ -22,4 +22,11 @@ public class ChatRoomService {
                 .toList();
     }
 
+    public ChatRoomDto findChatRoomByName(String name){
+        ChatRoom chatRoom = chatRoomRepository.findByName(name);
+        return chatRoom.createChatRoomDto();
+    }
+
+
+
 }
