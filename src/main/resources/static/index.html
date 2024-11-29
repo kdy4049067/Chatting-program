@@ -14,7 +14,7 @@
     <thead>
     <tr>
         <th>Room Name</th>
-        <th>Description</th>
+        <button onclick="connect()">enter</button>
     </tr>
     </thead>
     <tbody>
@@ -48,7 +48,12 @@
                     const name = document.createElement('td');
 
                     name.textContent = room.name;
+                    const hidden = document.createElement('input');
+                    hidden.type = 'hidden';
+                    hidden.value = room.roomId;
+
                     row.appendChild(name);
+                    row.appendChild(hidden);
                     tableBody.appendChild(row);
                 })
         })
@@ -82,8 +87,9 @@
 
         var message = {
             sender: document.getElementById('username').value,
-            content: document.getElementById('message').value,
-            type: 'CHAT'
+            message: document.getElementById('message').value,
+            messageType: 'CHAT',
+            roomId:
         };
         console.log("Sending message:", message);
         stompClient.send("/pub/chat/send", {}, JSON.stringify(message));
