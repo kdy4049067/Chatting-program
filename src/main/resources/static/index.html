@@ -34,8 +34,13 @@
 
 <script>
     window.onload = function(){
-        fetch("/rooms")
-            .then(response => response.json())
+        fetch("/chat/rooms")
+            .then(response =>{
+                if(!response.ok){
+                    throw new Error("Network response was not ok");
+                }
+                return response.json();
+            })
             .then(data => {
                 const tableBody = document.querySelector('#chatRoomTable tbody');
                 data.forEach(room => {
