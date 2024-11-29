@@ -8,6 +8,20 @@
 <body>
 <h1>STOMP WebSocket Chat</h1>
 
+<h1>Chat Rooms</h1>
+
+<table id="chatRoomTable">
+    <thead>
+    <tr>
+        <th>Room Name</th>
+        <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+</table>
+
 <input type = "text" id = "createChatRoom" placeholder="Create Chat Room"/>
 <button onclick="createRoom()">create</button>
 
@@ -19,6 +33,25 @@
 <button onclick="sendMessage()">Send</button>
 
 <script>
+    window.onload = function(){
+        fetch("/rooms")
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.querySelector('#chatRoomTable tbody');
+                data.forEach(room => {
+                    const row = document.createElement('tr');
+                    const name = document.createElement('td');
+
+                    name.textContent = room.name;
+                    row.appendChild(name);
+                    tableBody.appendChild(row);
+                })
+        })
+            .catch(error =>{
+                console.error('채팅룸 조회 중 오류 발생', error);
+            });
+    };
+    
     var stompClient = null;
 
     function connect() {
