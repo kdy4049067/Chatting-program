@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -26,7 +27,8 @@ public class ChatRoomController {
     }
 
     @PostMapping("/room")
-    public ResponseEntity<ChatRoomDto> createRoom(@RequestBody String name) {
+    public ResponseEntity<ChatRoomDto> createRoom(@RequestBody Map<String, String> requestBody) {
+        String name = requestBody.get("name");
         ChatRoomDto chatRoomDto = chatRoomService.createChatRoom(name);
         return ResponseEntity.ok(chatRoomDto);
     }
