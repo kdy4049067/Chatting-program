@@ -19,6 +19,4 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, String> {
 
     public List<ChatRoom> findAll();
 
-    public ChatRoom createChatRoom(String name);
-
 }
