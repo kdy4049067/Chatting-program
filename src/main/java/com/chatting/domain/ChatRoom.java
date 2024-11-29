@@ -10,21 +10,15 @@ import java.util.*;
 
 @Data
 @NoArgsConstructor
-@Entity(name="chatting")
+@Entity
+@Table(name="chattingroom")
 public class ChatRoom implements Comparable<ChatRoom>{
     @Id
     private String roomId;
     @Column
     private String name;
-
-    @PrePersist
-    public void generateId(){
-        if(this.roomId == null){
-            this.roomId = UUID.randomUUID().toString();
-        }
-    }
-
     public ChatRoom(String name){
+        this.roomId = UUID.randomUUID().toString();
         this.name = name;
     }
 
