@@ -25,15 +25,18 @@
 <input type = "text" id = "createChatRoom" placeholder="Create Chat Room"/>
 <button onclick="createRoom()">create</button>
 
-<div id="chat"></div>
-<input type="text" id="username" placeholder="Enter your name" />
-<button onclick="connect()">Connect</button>
-<br>
-<input type="text" id="message" placeholder="Enter your message" />
-<button onclick="sendMessage()">Send</button>
+<div id="chatRoomView" style="display:none;">
+    <h2>Room: <span id="roomName"></span></h2>
+    <div id = "chat"></div>
+    <input type="text" id="message" placeholder="Enter message"/>
+    <button onclick="sendMessage()">Send</button>
+    <br>
+    <input type="text" id="userName" placeholder="Enter name"/>
+</div>
 
 <script>
     var currentRoomId=  null;
+    var roomName = null;
 
     window.onload = function(){
         fetch("/chat/rooms")
@@ -53,11 +56,10 @@
 
                     name.textContent = room.name;
 
-                    // Create Enter button and set the data-roomId attribute
                     enterButton.textContent = "Enter";
-                    enterButton.setAttribute('data-roomId', room.roomId); // Store roomId as a data attribute
+
                     enterButton.onclick = function() {
-                        connect(this.getAttribute('data-roomId')); // Connect with roomId
+                        enterRoom(room);
                     };
 
                     actionCell.appendChild(enterButton);
@@ -73,7 +75,14 @@
 
     var stompClient = null;
 
-    function connect(roomId) {
+    function enterRoom(room){
+        currentRoomId = room.roomId;
+        roomName = room.name;
+        document.getElementById("chatRoomView").style.display="block";
+        document.getElementById("roomName").textContent=roomName;
+        connect();
+    }
+    function connect() {
         if (stompClient && stompClient.connected) {
             console.log('Already connected');
             return;
@@ -83,8 +92,7 @@
 
         stompClient.connect({}, function(frame) {
             console.log('Connected: ' + frame);
-            currentRoomId = roomId;
-            stompClient.subscribe('/sub/chat/room' + roomId, function(message) {
+            stompClient.subscribe('/sub/chat/room' + currentRoomId, function(message) {
                 console.log("Received message:", message.body);
                 showMessage(JSON.parse(message.body));
             });
@@ -100,10 +108,10 @@
         }
 
         var message = {
-            sender: document.getElementById('username').value,
+            sender: document.getElementById('userName').value,
             message: document.getElementById('message').value,
-            messageType: 'CHAT',
-            roomId: currentRoomId;
+            messageType: 'TALK',
+            roomId: currentRoomId
         };
         console.log("Sending message:", message);
         stompClient.send("/pub/chat/send", {}, JSON.stringify(message));
