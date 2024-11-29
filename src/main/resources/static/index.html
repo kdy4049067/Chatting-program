@@ -14,7 +14,7 @@
     <thead>
     <tr>
         <th>Room Name</th>
-        <button onclick="connect()">enter</button>
+        <th>action</th>
     </tr>
     </thead>
     <tbody>
@@ -33,10 +33,12 @@
 <button onclick="sendMessage()">Send</button>
 
 <script>
+    var currentRoomId=  null;
+
     window.onload = function(){
         fetch("/chat/rooms")
-            .then(response =>{
-                if(!response.ok){
+            .then(response => {
+                if (!response.ok) {
                     throw new Error("Network response was not ok");
                 }
                 return response.json();
@@ -46,31 +48,43 @@
                 data.forEach(room => {
                     const row = document.createElement('tr');
                     const name = document.createElement('td');
+                    const actionCell = document.createElement('td');
+                    const enterButton = document.createElement('button');
 
                     name.textContent = room.name;
-                    const hidden = document.createElement('input');
-                    hidden.type = 'hidden';
-                    hidden.value = room.roomId;
 
+                    // Create Enter button and set the data-roomId attribute
+                    enterButton.textContent = "Enter";
+                    enterButton.setAttribute('data-roomId', room.roomId); // Store roomId as a data attribute
+                    enterButton.onclick = function() {
+                        connect(this.getAttribute('data-roomId')); // Connect with roomId
+                    };
+
+                    actionCell.appendChild(enterButton);
                     row.appendChild(name);
-                    row.appendChild(hidden);
+                    row.appendChild(actionCell);
                     tableBody.appendChild(row);
-                })
-        })
-            .catch(error =>{
-                console.error('채팅룸 조회 중 오류 발생', error);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching chat rooms:', error);
             });
     };
 
     var stompClient = null;
 
-    function connect() {
+    function connect(roomId) {
+        if (stompClient && stompClient.connected) {
+            console.log('Already connected');
+            return;
+        }
         var socket = new SockJS('/ws-stomp');
         stompClient = Stomp.over(socket);
 
         stompClient.connect({}, function(frame) {
             console.log('Connected: ' + frame);
-            stompClient.subscribe('/sub/chat/room', function(message) {
+            currentRoomId = roomId;
+            stompClient.subscribe('/sub/chat/room' + roomId, function(message) {
                 console.log("Received message:", message.body);
                 showMessage(JSON.parse(message.body));
             });
@@ -89,7 +103,7 @@
             sender: document.getElementById('username').value,
             message: document.getElementById('message').value,
             messageType: 'CHAT',
-            roomId:
+            roomId: currentRoomId;
         };
         console.log("Sending message:", message);
         stompClient.send("/pub/chat/send", {}, JSON.stringify(message));
