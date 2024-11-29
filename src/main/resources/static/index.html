@@ -51,7 +51,7 @@
                 console.error('채팅룸 조회 중 오류 발생', error);
             });
     };
-    
+
     var stompClient = null;
 
     function connect() {
@@ -96,8 +96,10 @@
             return;
         }
 
-        fetch('/chat/room?name=' + encodeURIComponent(roomName),{
-            method: 'POST',
+        fetch('/chat/room',{
+            method:'POST',
+            headers:{'Content-Type': 'application/json'},
+            body: JSON.stringify({name: roomName})
         })
             .then(response => response.json())
             .then(data =>{
