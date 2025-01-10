@@ -119,7 +119,7 @@
 
     function showMessage(message) {
         var chat = document.getElementById('chat');
-        chat.innerHTML += `<p><strong>${message.sender}:</strong> ${message.content}</p>`;
+        chat.innerHTML += `<p><strong>${message.sender}:</strong> ${message.message}</p>`;
     }
 
     function createRoom(){
@@ -138,8 +138,6 @@
             .then(data =>{
                 console.log("Chat room created:", data);
                 alert(`Chat room "${data.name}" created! Room ID: ${data.roomId}`);
-
-
             })
     }
 </script>

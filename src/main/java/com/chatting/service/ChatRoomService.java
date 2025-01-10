@@ -32,7 +32,7 @@ public class ChatRoomService {
 
     @Transactional
     public ChatRoomDto findChatRoomById(String id){
-        ChatRoom chatRoom = chatRoomRepository.findByName(id);
+        ChatRoom chatRoom = chatRoomRepository.findByRoomId(id);
         return chatRoom.createChatRoomDto();
     }
 
