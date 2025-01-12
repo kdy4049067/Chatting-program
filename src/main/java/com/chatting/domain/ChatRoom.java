@@ -11,12 +11,16 @@ import java.util.*;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name="chattingroom")
+@Table(name = "chattingroom")
 public class ChatRoom implements Comparable<ChatRoom>{
+
     @Id
     private String roomId;
     @Column
     private String name;
+    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
+    private List<ChatMessage> chatMessages = new ArrayList<>();
+
     public ChatRoom(String name){
         this.roomId = UUID.randomUUID().toString();
         this.name = name;
