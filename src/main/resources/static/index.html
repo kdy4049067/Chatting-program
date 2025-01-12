@@ -1,12 +1,142 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>STOMP WebSocket Chat</title>
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+
+    <!-- Adding some CSS for better design -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7f6;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+            margin-top: 20px;
+        }
+
+        #chatRoomTable {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        #chatRoomTable th, #chatRoomTable td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        #chatRoomTable th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        #chatRoomTable td button {
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #chatRoomTable td button:hover {
+            background-color: #45a049;
+        }
+
+        #createChatRoom {
+            padding: 10px;
+            width: 200px;
+            margin: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+
+        #chatRoomView {
+            width: 80%;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        #chatRoomView h2 {
+            color: #4CAF50;
+        }
+
+        #chat {
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        #chat p {
+            margin: 5px 0;
+        }
+
+        #message, #userName {
+            padding: 10px;
+            width: 80%;
+            margin: 5px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .alert {
+            padding: 10px;
+            margin: 10px;
+            background-color: #f9ed69;
+            color: #333;
+            border-radius: 4px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
+
 <h1>STOMP WebSocket Chat</h1>
+
+<div id="chatRoomView" style="display:none;">
+    <h2>Room: <span id="roomName"></span></h2>
+    <div id="chat"></div>
+    <input type="text" id="message" placeholder="Enter message"/>
+    <button onclick="sendMessage()">Send</button>
+    <br><br>
+    <input type="text" id="userName" placeholder="Enter name"/>
+</div>
 
 <h1>Chat Rooms</h1>
 
@@ -14,38 +144,22 @@
     <thead>
     <tr>
         <th>Room Name</th>
-        <th>action</th>
+        <th>Action</th>
     </tr>
     </thead>
-    <tbody>
-
-    </tbody>
+    <tbody></tbody>
 </table>
 
-<input type = "text" id = "createChatRoom" placeholder="Create Chat Room"/>
-<button onclick="createRoom()">create</button>
-
-<div id="chatRoomView" style="display:none;">
-    <h2>Room: <span id="roomName"></span></h2>
-    <div id = "chat"></div>
-    <input type="text" id="message" placeholder="Enter message"/>
-    <button onclick="sendMessage()">Send</button>
-    <br>
-    <input type="text" id="userName" placeholder="Enter name"/>
-</div>
+<input type="text" id="createChatRoom" placeholder="Create Chat Room" />
+<button onclick="createRoom()">Create</button>
 
 <script>
-    var currentRoomId=  null;
+    var currentRoomId = null;
     var roomName = null;
 
     window.onload = function(){
         fetch("/chat/rooms")
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("Network response was not ok");
-                }
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
                 const tableBody = document.querySelector('#chatRoomTable tbody');
                 data.forEach(room => {
@@ -55,9 +169,7 @@
                     const enterButton = document.createElement('button');
 
                     name.textContent = room.name;
-
                     enterButton.textContent = "Enter";
-
                     enterButton.onclick = function() {
                         enterRoom(room);
                     };
@@ -75,13 +187,14 @@
 
     var stompClient = null;
 
-    function enterRoom(room){
+    function enterRoom(room) {
         currentRoomId = room.roomId;
         roomName = room.name;
-        document.getElementById("chatRoomView").style.display="block";
-        document.getElementById("roomName").textContent=roomName;
+        document.getElementById("chatRoomView").style.display = "block";
+        document.getElementById("roomName").textContent = roomName;
         connect();
     }
+
     function connect() {
         allChatting();
         if (stompClient && stompClient.connected) {
@@ -115,16 +228,16 @@
             roomId: currentRoomId
         };
 
-        fetch('/chat/save',{
-            method:'POST',
-            headers:{'Content-Type': 'application/json'},
+        fetch('/chat/save', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(message)
         })
             .then(response => response.json())
-            .then(data =>{
+            .then(data => {
                 console.log("Chat created:", data);
                 alert(`Chat sender "${data.sender}" chat message: ${data.message}`);
-            })
+            });
 
         console.log("Sending message:", message);
         stompClient.send("/pub/chat/send", {}, JSON.stringify(message));
@@ -135,33 +248,28 @@
         chat.innerHTML += `<p><strong>${message.sender}:</strong> ${message.message}</p>`;
     }
 
-    function createRoom(){
+    function createRoom() {
         var roomName = document.getElementById("createChatRoom").value;
-        if(!roomName){
-            alert("please enter a room name");
+        if (!roomName) {
+            alert("Please enter a room name");
             return;
         }
 
-        fetch('/chat/room',{
-            method:'POST',
-            headers:{'Content-Type': 'application/json'},
+        fetch('/chat/room', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({name: roomName})
         })
             .then(response => response.json())
-            .then(data =>{
+            .then(data => {
                 console.log("Chat room created:", data);
                 alert(`Chat room "${data.name}" created! Room ID: ${data.roomId}`);
-            })
+            });
     }
 
-    function allChatting(){
+    function allChatting() {
         fetch("/chat/room/chatting/record")
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("Network response was not ok");
-                }
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
                 var chat = document.getElementById('chat');
                 data.forEach(chatting => {
@@ -172,7 +280,6 @@
                 console.error('Error fetching', error);
             });
     }
-
 </script>
 </body>
 </html>
