@@ -58,9 +58,9 @@ public class ChatRoomController {
         return ResponseEntity.ok(chatRoomDto);
     }
 
-    @GetMapping("/room/chatting/record")
-    public ResponseEntity<List<ChatDto>> chattingRecord(){
-        List<ChatMessage> chatMessage = chatRoomService.findAllChatMessage();
+    @PostMapping("/room/chatting/record")
+    public ResponseEntity<List<ChatDto>> chattingRecord(@RequestBody ChatDto chatDto){
+        List<ChatMessage> chatMessage = chatRoomService.findChatByRoomId(chatDto.roomId());
         List<ChatDto> chatDtos = chatMessage.stream()
                 .map(ChatDto::toChatDto)
                 .collect(Collectors.toList());

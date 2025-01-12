@@ -8,6 +8,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ChatRoomService {
@@ -57,6 +58,14 @@ public class ChatRoomService {
             throw new IllegalArgumentException("chatRoom 없음");
 
         return chatRoom;
+    }
+
+    @Transactional
+    public List<ChatMessage> findChatByRoomId(String roomId){
+        List<ChatMessage> allChat = findAllChatMessage();
+         return allChat.stream()
+                .filter(chatMessage -> chatMessage.getRoomId().equals(roomId))
+                .collect(Collectors.toList());
     }
 
 }

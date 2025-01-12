@@ -196,8 +196,6 @@
     }
 
     function connect() {
-        var chat = document.getElementById('chat');
-        chat.innerHTML = "";
         allChatting();
         if (stompClient && stompClient.connected) {
             console.log('Already connected');
@@ -270,10 +268,19 @@
     }
 
     function allChatting() {
-        fetch("/chat/room/chatting/record")
+        const requestBody = {
+            roomId: currentRoomId
+        };
+
+        fetch("/chat/room/chatting/record", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(requestBody)
+        })
             .then(response => response.json())
             .then(data => {
                 var chat = document.getElementById('chat');
+                chat.innerHTML = '';
                 data.forEach(chatting => {
                     chat.innerHTML += `<p><strong>${chatting.sender}:</strong> ${chatting.message}</p>`;
                 });

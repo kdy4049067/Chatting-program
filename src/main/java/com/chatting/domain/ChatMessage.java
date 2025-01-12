@@ -38,4 +38,7 @@ public class ChatMessage {
     @JoinColumn(name = "roomId")
     private ChatRoom chatRoom;
 
+    public String getRoomId(){
+        return chatRoom.getRoomId();
+    }
 }
