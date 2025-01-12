@@ -1,6 +1,7 @@
 package com.chatting.controller;
 
-import com.chatting.domain.ChatRoom;
+import com.chatting.domain.ChatMessage;
+import com.chatting.dto.ChatDto;
 import com.chatting.dto.ChatRoomDto;
 import com.chatting.service.ChatRoomService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -54,6 +56,16 @@ public class ChatRoomController {
     public ResponseEntity<ChatRoomDto> findRoomByName(@PathVariable (name = "roomName") String roomName){
         ChatRoomDto chatRoomDto = chatRoomService.findChatRoomByName(roomName);
         return ResponseEntity.ok(chatRoomDto);
+    }
+
+    @GetMapping("/room/chatting/record")
+    public ResponseEntity<List<ChatDto>> chattingRecord(@RequestBody String roomId){
+        List<ChatMessage> chatMessage = chatRoomService.findChatMessageByRoomId(roomId);
+        List<ChatDto> chatDtos = chatMessage.stream()
+                .map(ChatDto::toChatDto)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(chatDtos);
     }
 
 }
