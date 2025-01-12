@@ -46,8 +46,8 @@ public class ChatRoomService {
     }
 
     @Transactional
-    public List<ChatMessage> findChatMessageByRoomId(String roomId){
-        return chatRoomRepository.findChatMessageByRoomId(roomId);
+    public List<ChatMessage> findAllChatMessage(){
+        return chatRoomRepository.findAllChatMessage();
     }
 
     @Transactional
