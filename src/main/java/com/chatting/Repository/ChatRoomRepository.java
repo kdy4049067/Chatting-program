@@ -1,11 +1,13 @@
 package com.chatting.Repository;
 
+import com.chatting.domain.ChatMessage;
 import com.chatting.domain.ChatRoom;
 import com.chatting.domain.GenerateRandom;
 import com.chatting.domain.GenerateRandomRoom;
 import com.chatting.exception.ErrorException;
 import jakarta.annotation.PostConstruct;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
@@ -18,5 +20,7 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, String> {
     public ChatRoom findByRoomId(String id);
 
     public List<ChatRoom> findAll();
+
+    public List<ChatMessage> findChatMessageByRoomId(String roomId);
 
 }

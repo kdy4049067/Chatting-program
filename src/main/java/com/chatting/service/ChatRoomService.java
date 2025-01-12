@@ -1,6 +1,7 @@
 package com.chatting.service;
 
 import com.chatting.Repository.ChatRoomRepository;
+import com.chatting.domain.ChatMessage;
 import com.chatting.domain.ChatRoom;
 import com.chatting.dto.ChatRoomDto;
 import jakarta.transaction.Transactional;
@@ -42,6 +43,20 @@ public class ChatRoomService {
         chatRoomRepository.save(chatRoom);
 
         return chatRoom.createChatRoomDto();
+    }
+
+    @Transactional
+    public List<ChatMessage> findChatMessageByRoomId(String roomId){
+        return chatRoomRepository.findChatMessageByRoomId(roomId);
+    }
+
+    @Transactional
+    public ChatRoom findByRoomId(String roomId){
+        ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId);
+        if(chatRoom == null)
+            throw new IllegalArgumentException("chatRoom 없음");
+
+        return chatRoom;
     }
 
 }
