@@ -196,6 +196,8 @@
     }
 
     function connect() {
+        var chat = document.getElementById('chat');
+        chat.innerHTML = "";
         allChatting();
         if (stompClient && stompClient.connected) {
             console.log('Already connected');
